@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView, ProgressBarAndroid , TouchableOpacity, Button } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, ProgressBarAndroid , TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import ExamList from './ExamList'
 
@@ -91,7 +91,34 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         fontSize: 34,
         color: '#FF6AB2'
-    }
+    },
+
+    container2: {
+        height:'100%',
+        zIndex:2,
+        flex:1, 
+        backgroundColor:'#000000aa',
+        alignItems: 'center',
+        justifyContent: 'center',
+      },
+      popup:{
+          backgroundColor:'#fff', 
+          margin:50, 
+          padding:30,
+      },
+      textPopup:{
+          fontFamily:'kanitRegular',
+          fontSize:21,
+          color:'#2196F3',
+          textAlign: 'center',
+      },
+      textPopupSmall:{
+          paddingTop:10,
+          fontFamily:'kanitLight',
+          fontSize:10,
+          color:'#7A7575',
+          textAlign: 'center',
+      }
 });
 
 class Exam extends React.Component{
@@ -103,7 +130,7 @@ class Exam extends React.Component{
         statusControlBack: true,
 
         minute:9,
-        sec:60
+        sec:60,
     }
 
     componentDidMount() {
@@ -207,55 +234,69 @@ class Exam extends React.Component{
     }
 
     render() {
-        return (
-        <View style = { styles.container }>
-            <View style = { styles.perpose }>
-                <Text style = { styles.textTop }><Text style={{textDecorationLine:"underline"}}>คำชี้แจง</Text> ข้อสอบมีทั้งหมด 10 ข้อ เวลาในการทำ 10 นาที</Text>
-            </View>
-            <View style = { styles.Timmer }>
-                <Text style={styles.textTime}>
-                    {
-                        this.state.minute !== 0 ? this.state.minute +' นาที '+ this.state.sec +' วินาที'
-                        : this.state.sec !== 0 ? this.state.sec +' วินาที' : 'หมดเวลา'
-                    }
-                </Text>
-            </View>   
-            <View style = { styles.boxExam }>
-                <ScrollView>
-                    <ExamList 
-                        examAll = { this.props.examList[ this.props.arrPosition ] } 
-                        number = { this.props.arrPosition + 1 } 
-                        setNextQuestion = { this.setNextQuestion }
-                    />
-                </ScrollView>
-            </View>  
-            <View style = { styles.areaCheckAnswer }> 
-                {this.props.showButtonAnswer === true ?
-                    <TouchableOpacity style = { styles.buttomCheckAnswer } onPress={this.props.showScore} >    
-                        <Text style = { styles.buttonCheck }>ส่งคำตอบ</Text>
-                    </TouchableOpacity>
-                :null}
-            </View>
-            <View style = { styles.bottom }>
-                <Text style = { styles.TextBottom }>หมวดวิชาภาค ก</Text> 
-            </View>
-            <View style = { styles.bottomNP }>
-                <TouchableOpacity  onPress={() => this.setArr(1)} disabled={ this.state.statusControlBack }>
-                    <Ionicons name="md-arrow-back" size={44} color={this.state.colorControlBack }/>
-                </TouchableOpacity > 
-                <View style = { styles.circlePercen }>
-                    <ProgressBarAndroid
-                        styleAttr="Horizontal"
-                        indeterminate={false}
-                        progress={ this.props.checkProgress/10 }
-                        color="#2196F3"
-                    />
+        let myJsx = null
+        myJsx = (
+            <View style = { styles.container2 }>
+                <View style={styles.popup}>
+                    <ProgressBarAndroid styleAttr="Horizontal" color="#2196F3" />
+                    <Text style={styles.textPopup}>รอแป๊บนึงเด้อจ้า ระบบกำลังประมวลผล</Text>
+                    <Text style={styles.textPopupSmall}>หมายเหตุ : หากรอนานเกินไป โปรดตรวจสอบการเชื่อมต่ออินเทอร์เน็ต และเปิดแอปพลิเคชันใหม่</Text>
                 </View>
-                <TouchableOpacity  onPress={() => this.setArr(2)} disabled={ this.state.statusControlNext }>
-                    <Ionicons name="md-arrow-forward" size={ 44 } color={ this.state.colorControlNext }/>
-                </TouchableOpacity >
             </View>
-        </View>
+        )
+        return (
+            <View style = { styles.container }>
+                {this.props.statusPopup === true ? myJsx : 
+                <View>
+                    <View style = { styles.perpose }>
+                    <Text style = { styles.textTop }><Text style={{textDecorationLine:"underline"}}>คำชี้แจง</Text> ข้อสอบมีทั้งหมด 10 ข้อ เวลาในการทำ 10 นาที</Text>
+                    </View>
+                    <View style = { styles.Timmer }>
+                        <Text style={styles.textTime}>
+                            {
+                                this.state.minute !== 0 ? this.state.minute +' นาที '+ this.state.sec +' วินาที'
+                                : this.state.sec !== 0 ? this.state.sec +' วินาที' : 'หมดเวลา'
+                            }
+                        </Text>
+                    </View>   
+                    <View style = { styles.boxExam }>
+                        <ScrollView>
+                            <ExamList 
+                                examAll = { this.props.examList[ this.props.arrPosition ] } 
+                                number = { this.props.arrPosition + 1 } 
+                                setNextQuestion = { this.setNextQuestion }
+                            />
+                        </ScrollView>
+                    </View>  
+                    <View style = { styles.areaCheckAnswer }> 
+                        {this.props.showButtonAnswer === true ?
+                            <TouchableOpacity style = { styles.buttomCheckAnswer } onPress={this.props.showScore} >    
+                                <Text style = { styles.buttonCheck }>ส่งคำตอบ</Text>
+                            </TouchableOpacity>
+                        :null}
+                    </View>
+                    <View style = { styles.bottom }>
+                        <Text style = { styles.TextBottom }>หมวดวิชาภาค ก</Text> 
+                    </View>
+                    <View style = { styles.bottomNP }>
+                        <TouchableOpacity  onPress={() => this.setArr(1)} disabled={ this.state.statusControlBack }>
+                            <Ionicons name="md-arrow-back" size={44} color={this.state.colorControlBack }/>
+                        </TouchableOpacity > 
+                        <View style = { styles.circlePercen }>
+                            <ProgressBarAndroid
+                                styleAttr="Horizontal"
+                                indeterminate={false}
+                                progress={ this.props.checkProgress/10 }
+                                color="#2196F3"
+                            />
+                        </View>
+                        <TouchableOpacity  onPress={() => this.setArr(2)} disabled={ this.state.statusControlNext }>
+                            <Ionicons name="md-arrow-forward" size={ 44 } color={ this.state.colorControlNext }/>
+                        </TouchableOpacity >
+                    </View>
+                </View>}
+                
+            </View>
         );
     }
 }

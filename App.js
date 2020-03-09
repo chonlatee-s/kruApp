@@ -1,11 +1,19 @@
 import React from 'react';
-import { View, StyleSheet, Modal, Text } from 'react-native';
+import { View, StyleSheet, Modal} from 'react-native';
 import { AppLoading } from 'expo';
 import * as Font from 'expo-font'
 import Welcome from './Welcome'
 import SelectMode from './SelectMode'
 import Exam from './Exam'
 import ShowScore from './ShowScore'
+import axios from 'axios'
+
+import {
+  AdMobBanner,
+  AdMobInterstitial,
+  PublisherBanner,
+  AdMobRewarded
+} from 'expo-ads-admob';
 
 const styles = StyleSheet.create({
   container: {
@@ -21,14 +29,16 @@ export default class App extends React.Component {
     countDown: true, // เพิ่มขึ้นมา 
     selectTopic: false,
     topic:'0',
-    examList:[ { id:'', question:'', ch1: '', ch2: '', ch3:'', ch4:'', answer:'0', reply:'0', check:false }],
+    examList:[ { id:'', question:'', ch1: '', ch2: '', ch3:'', ch4:'', answer:'0', reply:'0', check:false, ref:'' }],
     arrPosition : 0,
     score : 0,
     showButtonAnswer:false,
     checkProgress:0,
     showScoreStatus:false,
 
-    checkStartTime:false
+    checkStartTime:false,
+    statusPopup:true,
+    statusShowScore:false,
   }
   constructor(props) {
     super(props)
@@ -57,20 +67,38 @@ export default class App extends React.Component {
   }
 
   getTopic = (topic) => {
+    let ExamFromDB = []
     this.setState({ 
-      // เซทหัวข้อ
-      topic: topic
-      }, () => {
-      // ดึงข้อสอบ
-      this.setState({ // เดี๋ยวค่อยเช็คว่าต่อเน็ตหรือไม่ ตอนดึงข้อสอบ
-        examList:[
-        { id: 1, question:'วันนี้กินอะไรดี', ch1: 'ส้มตำไก่ย่าง', ch2: 'น้ำเต้าหู้นมเนย', ch3:'มะม่วงข้าวเหนียว', ch4:'พิซซ่าหน้าขอบผลไม้', answer:'1', reply:'0', check:false },
-        { id: 2, question:'วันจันทร์สีอะไร', ch1: 'แดง', ch2: 'ขาว', ch3:'ดำ', ch4:'น้ำตาล', answer:'2', reply:'0', check:false },
-        { id: 3, question:'นกอะไรน่ากลัว', ch1: 'นกกา', ch2: 'นกแก้ว', ch3:'นกเอี้ยง', ch4:'นกเขาไม่ใช่นกเรา', answer:'2', reply:'0', check:false },
-        ]})
+      topic: topic, // เซทหัวข้อ
+      checkStartTime: true // เริ่มเวลา
+      }, () => {// ดึงข้อสอบ
+        axios.get(`http://xn--42cm7czac0a7jb0li.com/getExam.php?topic=${topic}`)
+        .then((response)=>{
+          if(response.data.length === 0) console.log('No Data')
+          else{
+            response.data.map((item)=>{
+              return(
+                ExamFromDB.push({ 
+                  id: item.id, 
+                  question:item.question,
+                  ch1:item.ch1,
+                  ch2:item.ch2,
+                  ch3:item.ch3,
+                  ch4:item.ch4,
+                  answer:item.answer, 
+                  reply:'0', check:false,
+                  ref:item.ref
+                })
+              ) // end return
+            })//end map
+            this.setState({examList:ExamFromDB} , () => { 
+              this.setState({statusPopup:false})
+            })
+          }
+        }).catch((err)=>{
+          console.log(err)
+        })
     })
-
-    this.setState({checkStartTime:true})
   }
   // set ค่าตำแหน่ง array
   setArrPosition = (BF) => {
@@ -128,6 +156,7 @@ export default class App extends React.Component {
   showScore = () => {
     this.setState({score : this.result()})
     this.setState({showScoreStatus:true})
+    this.setState({statusShowScore:true})
     this.resetTime()
   }
   
@@ -144,13 +173,17 @@ export default class App extends React.Component {
       checkProgress:0,
       showScoreStatus:false,
 
-      checkStartTime :false
+      checkStartTime :false,
+      statusPopup:true,
+      statusShowScore:false,
     })
   }
   resetTime = () => {
     this.setState({checkStartTime:false})
   }
-
+  setStatusShowScore = () => {
+    this.setState({statusShowScore:false})
+  }
   render() {
     const { loadingFont } = this.state
 
@@ -169,6 +202,12 @@ export default class App extends React.Component {
           <SelectMode 
             getTopic = { this.getTopic }
           />
+          <AdMobBanner
+            bannerSize="fullBanner"
+            adUnitID="ca-app-pub-5901161227057601/7431599741" // Test ID, Replace with your-admob-unit-id
+            testDeviceID="EMULATOR"
+            servePersonalizedAds // true or false
+            onDidFailToReceiveAdWithError={this.bannerError} />
         </Modal>
         <Modal visible = { this.state.topic === '0' ? false : true } animationType = "fade">
           <Exam 
@@ -182,13 +221,32 @@ export default class App extends React.Component {
 
             checkStartTime = {this.state.checkStartTime}
             resetTime = {this.resetTime}
+            statusPopup = {this.state.statusPopup}
           />
+          <AdMobBanner
+              bannerSize="fullBanner"
+              adUnitID="ca-app-pub-5901161227057601/7431599741" // Test ID, Replace with your-admob-unit-id
+              testDeviceID="EMULATOR"
+              servePersonalizedAds // true or false
+              onDidFailToReceiveAdWithError={this.bannerError} />
         </Modal>
-
+        
         <Modal visible = {this.state.showScoreStatus} animationType = "fade">
-            <ShowScore score = {this.state.score} exam = {this.state.examList} beginAgain={this.beginAgain}/>
+          <ShowScore 
+            score = {this.state.score} 
+            exam = {this.state.examList} 
+            beginAgain={this.beginAgain}
+            statusShowScore={this.state.statusShowScore}
+            setStatusShowScore={this.setStatusShowScore}
+          />
+          <AdMobBanner
+            bannerSize="fullBanner"
+            adUnitID="ca-app-pub-5901161227057601/7431599741" // Test ID, Replace with your-admob-unit-id
+            testDeviceID="EMULATOR"
+            servePersonalizedAds // true or false
+            onDidFailToReceiveAdWithError={this.bannerError} />
         </Modal>
-
+        
       </View>
     );
   }
