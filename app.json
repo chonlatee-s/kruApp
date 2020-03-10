@@ -9,29 +9,27 @@
       "android",
       "web"
     ],
-    
-  
- 
-      "android": {
-        "config": {
-          "googleMobileAdsAppId": "ca-app-pub-5901161227057601~1524666944"
-        }
-      },
-      "ios": {
-        "supportsTablet": true,
-        "config": {
-          "googleMobileAdsAppId": "ca-app-pub-5901161227057601~1524666944" 
-        }
-      },
-
-
+    "android": {
+      "package":"com.kruApp.kruphoochuay",
+      "versionCode":1,
+      "config": {
+        "googleMobileAdsAppId": "ca-app-pub-5901161227057601~1524666944"
+      }
+    },
+    "ios": {
+      "supportsTablet": true,
+      "buildNumber":"1.0.0",
+      "config": {
+        "googleMobileAdsAppId": "ca-app-pub-5901161227057601~1524666944" 
+      }
+    },
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#fff"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
