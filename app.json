@@ -10,7 +10,7 @@
       "web"
     ],
     "android": {
-      "package":"com.kruApp.kruphoochuay",
+      "package":"com.kruphoochuay.kruphoochuay",
       "versionCode":1,
       "config": {
         "googleMobileAdsAppId": "ca-app-pub-5901161227057601~1524666944"
@@ -19,6 +19,7 @@
     "ios": {
       "supportsTablet": true,
       "buildNumber":"1.0.0",
+      "bundleIdentifier": "com.kruphoochuay.kruphoochuay",
       "config": {
         "googleMobileAdsAppId": "ca-app-pub-5901161227057601~1524666944" 
       }

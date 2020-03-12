@@ -276,7 +276,7 @@ class Exam extends React.Component{
                         :null}
                     </View>
                     <View style = { styles.bottom }>
-                        <Text style = { styles.TextBottom }>หมวดวิชาภาค ก</Text> 
+                        <Text style = { styles.TextBottom }>หมวดวิชาภาค {this.props.topic==='1'?'ก':'ข'}</Text> 
                     </View>
                     <View style = { styles.bottomNP }>
                         <TouchableOpacity  onPress={() => this.setArr(1)} disabled={ this.state.statusControlBack }>

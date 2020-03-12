@@ -8,12 +8,7 @@ import Exam from './Exam'
 import ShowScore from './ShowScore'
 import axios from 'axios'
 
-import {
-  AdMobBanner,
-  AdMobInterstitial,
-  PublisherBanner,
-  AdMobRewarded
-} from 'expo-ads-admob';
+import { AdMobBanner} from 'expo-ads-admob';
 
 const styles = StyleSheet.create({
   container: {
@@ -199,6 +194,12 @@ export default class App extends React.Component {
           <Welcome />
         </Modal>
         <Modal visible={ this.state.selectTopic } animationType = "fade">
+          <AdMobBanner
+              bannerSize="fullBanner"
+              adUnitID="ca-app-pub-5901161227057601/7431599741" // Test ID, Replace with your-admob-unit-id
+              testDeviceID="EMULATOR"
+              servePersonalizedAds // true or false
+              onDidFailToReceiveAdWithError={this.bannerError} />
           <SelectMode 
             getTopic = { this.getTopic }
           />
@@ -210,6 +211,7 @@ export default class App extends React.Component {
             onDidFailToReceiveAdWithError={this.bannerError} />
         </Modal>
         <Modal visible = { this.state.topic === '0' ? false : true } animationType = "fade">
+          
           <Exam 
             examList = { this.state.examList }
             arrPosition = {this.state.arrPosition}
@@ -219,9 +221,11 @@ export default class App extends React.Component {
             showScore = {this.showScore}
             showButtonAnswer =  {this.state.showButtonAnswer}
 
+            topic = {this.state.topic}
             checkStartTime = {this.state.checkStartTime}
             resetTime = {this.resetTime}
             statusPopup = {this.state.statusPopup}
+
           />
           <AdMobBanner
               bannerSize="fullBanner"
