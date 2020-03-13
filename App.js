@@ -8,7 +8,8 @@ import Exam from './Exam'
 import ShowScore from './ShowScore'
 import axios from 'axios'
 
-import { AdMobBanner} from 'expo-ads-admob';
+import {AdMobBanner} from 'expo-ads-admob';
+import {BackHandler} from 'react-native';
 
 const styles = StyleSheet.create({
   container: {
@@ -21,8 +22,7 @@ export default class App extends React.Component {
   state = {
     loadingFont: true,
 
-    countDown: true, // เพิ่มขึ้นมา 
-    selectTopic: false,
+    selectTopic: true,
     topic:'0',
     examList:[ { id:'', question:'', ch1: '', ch2: '', ch3:'', ch4:'', answer:'0', reply:'0', check:false, ref:'' }],
     arrPosition : 0,
@@ -53,12 +53,6 @@ export default class App extends React.Component {
     })
 
     this.setState({ loadingFont: false })
-  }
-
-  CountDown = () => {
-    setTimeout(function () {
-      this.setState({ countDown: false, selectTopic: true })
-    }.bind(this), 3000);
   }
 
   getTopic = (topic) => {
@@ -159,7 +153,6 @@ export default class App extends React.Component {
   beginAgain = () => {
     this.setState({
       examList:[{ id:'', question:'', ch1: '', ch2: '', ch3:'', ch4:'', answer:'', reply:'0', check:false }],
-      countDown: false,
       selectTopic: true,
       topic:'0',
       arrPosition : 0,
@@ -179,6 +172,10 @@ export default class App extends React.Component {
   setStatusShowScore = () => {
     this.setState({statusShowScore:false})
   }
+  
+  handleBackButton(){
+  }
+
   render() {
     const { loadingFont } = this.state
 
@@ -186,13 +183,8 @@ export default class App extends React.Component {
       return <AppLoading />
     }
 
-    if (this.state.countDown === true) this.CountDown()
-
     return (
       <View style = { styles.container }>
-        <Modal visible = { this.state.countDown } animationType = "fade">
-          <Welcome />
-        </Modal>
         <Modal visible={ this.state.selectTopic } animationType = "fade">
           <AdMobBanner
               bannerSize="fullBanner"
@@ -228,11 +220,11 @@ export default class App extends React.Component {
 
           />
           <AdMobBanner
-              bannerSize="fullBanner"
-              adUnitID="ca-app-pub-5901161227057601/7431599741" // Test ID, Replace with your-admob-unit-id
-              testDeviceID="EMULATOR"
-              servePersonalizedAds // true or false
-              onDidFailToReceiveAdWithError={this.bannerError} />
+            bannerSize="fullBanner"
+            adUnitID="ca-app-pub-5901161227057601/7431599741" // Test ID, Replace with your-admob-unit-id
+            testDeviceID="EMULATOR"
+            servePersonalizedAds // true or false
+            onDidFailToReceiveAdWithError={this.bannerError} />
         </Modal>
         
         <Modal visible = {this.state.showScoreStatus} animationType = "fade">
@@ -245,12 +237,11 @@ export default class App extends React.Component {
           />
           <AdMobBanner
             bannerSize="fullBanner"
-            adUnitID="ca-app-pub-5901161227057601/7431599741" // Test ID, Replace with your-admob-unit-id
+            adUnitID="ca-app-pub-5901161227057601/7431599741"
             testDeviceID="EMULATOR"
             servePersonalizedAds // true or false
             onDidFailToReceiveAdWithError={this.bannerError} />
         </Modal>
-        
       </View>
     );
   }
