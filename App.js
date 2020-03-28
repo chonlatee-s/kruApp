@@ -2,7 +2,6 @@ import React from 'react';
 import { View, StyleSheet, Modal} from 'react-native';
 import { AppLoading } from 'expo';
 import * as Font from 'expo-font'
-import Welcome from './Welcome'
 import SelectMode from './SelectMode'
 import Exam from './Exam'
 import ShowScore from './ShowScore'
@@ -186,12 +185,6 @@ export default class App extends React.Component {
     return (
       <View style = { styles.container }>
         <Modal visible={ this.state.selectTopic } animationType = "fade">
-          <AdMobBanner
-              bannerSize="fullBanner"
-              adUnitID="ca-app-pub-5901161227057601/7431599741" // Test ID, Replace with your-admob-unit-id
-              testDeviceID="EMULATOR"
-              servePersonalizedAds // true or false
-              onDidFailToReceiveAdWithError={this.bannerError} />
           <SelectMode 
             getTopic = { this.getTopic }
           />
