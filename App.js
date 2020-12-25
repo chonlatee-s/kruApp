@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, StyleSheet, Modal} from 'react-native';
-import { AppLoading } from 'expo';
+// import { AppLoading } from 'expo';
+import AppLoading from 'expo-app-loading'
 import * as Font from 'expo-font'
 import SelectMode from './SelectMode'
 import Exam from './Exam'

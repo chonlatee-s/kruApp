@@ -1,6 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-
+import { View, Text, StyleSheet, TouchableOpacity, Linking } from 'react-native';
 const styles = StyleSheet.create({
     container: {
       flex: 1,
@@ -42,12 +41,22 @@ const styles = StyleSheet.create({
         fontSize:100,
         fontFamily: 'kanitLight',
         textAlign:'center'
+    },
+    contact: {
+        marginTop:10,
+        color:'#2196F3',
+        fontSize:14,
+        fontFamily: 'kanitLight',
+        textAlign:'center'
     }
 });
 
 class SelectMode extends React.Component{
     Show = (topic) => {
         this.props.getTopic(topic)
+    }
+    openWEB = () => {
+        Linking.openURL('https://xn--42cm7czac0a7jb0li.com/me');
     }
     render() {
         return (
@@ -65,6 +74,9 @@ class SelectMode extends React.Component{
                     <Text style = { styles.menuText }>ข</Text>
                 </TouchableOpacity>
             </View>
+            <TouchableOpacity onPress={this.openWEB}>
+                <Text style = { styles.contact }>ติดต่อเรา Contact Us</Text>
+            </TouchableOpacity>
         </View>
         );
     }

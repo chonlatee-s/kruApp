@@ -3,28 +3,27 @@
     "name": "ครูผู้ช่วย",
     "slug": "kruApp",
     "privacy": "public",
-    "sdkVersion": "36.0.0",
     "platforms": [
       "ios",
       "android",
       "web"
     ],
     "android": {
-      "package":"com.kruApp.kruphoochuay",
-      "versionCode":2,
+      "package": "com.kruApp.kruphoochuay",
+      "versionCode": 3,
       "config": {
         "googleMobileAdsAppId": "ca-app-pub-5901161227057601~1524666944"
       }
     },
     "ios": {
       "supportsTablet": true,
-      "buildNumber":"1.0.0",
+      "buildNumber": "1.0.0",
       "bundleIdentifier": "com.kruApp.kruphoochuay",
       "config": {
-        "googleMobileAdsAppId": "ca-app-pub-5901161227057601~1524666944" 
+        "googleMobileAdsAppId": "ca-app-pub-5901161227057601~1524666944"
       }
     },
-    "version": "1.0.0",
+    "version": "3.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
@@ -37,6 +36,7 @@
     },
     "assetBundlePatterns": [
       "**/*"
-    ]
+    ],
+    "description": ""
   }
 }
