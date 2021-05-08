@@ -1,150 +1,108 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView, ProgressBarAndroid , TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, ScrollView , TouchableOpacity, Modal } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import ProgressBar from 'react-native-progress/Bar';
 import ExamList from './ExamList'
+import Result from './Result'
+import {AdMobBanner} from 'expo-ads-admob';
 
 const styles = StyleSheet.create({
     container: {
-      flex: 1,
-    },
-    textTop: {
-        fontFamily: 'kanitLight',
-        textAlign: 'center',
-        fontSize: 14,
-        color: '#fff'
-    },
-    perpose: {
-        height : '10%',
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor:'#2196F3',
-        padding:15
-    },
-    Timmer: {
-        height : '10%',
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor:'#fff',
+        flex: 1,
     },
     boxExam: {
-        height:'50%',
-        backgroundColor:'#fff',
-        padding:10
+        height:'60%',
+        marginBottom:20,
     },
-    bottom: {
-        height: '5%'
+    time: {
+        color:'#627498',
+        fontFamily:'kanitRegular',
+        fontSize:16,
+        textAlign:'center',
+        marginTop:20,
+        marginBottom:10,
     },
-    TextBottom: {
-        fontFamily: 'kanitLight',
-        fontSize: 12,
-        color: '#7A7575',
-        textAlign: 'center',
-        paddingTop: 10
-    },
-    bottomNP: {
+    btnNP: {
         height:'20%',
         justifyContent: 'center',
         flexDirection: 'row',
-        paddingRight:15,
-        paddingLeft:15
     },
-    percent: {
+    percentBar: {
+        marginTop:5,
+        paddingLeft:105,
+        paddingRight:105,
+        color:'#627498',
+        fontFamily:'kanitRegular',
+        fontSize:18,
+        textAlign:'center',
+    },
+    btnAnswer: {
+        backgroundColor: '#fff',
+        borderRadius: 5,
+        marginBottom:72,
+        borderColor:'#627498',
+        borderWidth:1.5
+    },
+    txtbtnAnswer: {
+        color: '#627498',
         fontFamily: 'kanitRegular',
-        fontSize: 28,
-        color: '#7A7575',
-        textAlign: 'center',
-        
-    },
-    percentSmall:{
-        fontFamily: 'kanitLight',
-        fontSize: 9,
-        color: '#7A7575',
-        textAlign: 'center',
-        paddingBottom: 10
-    },
-    circlePercen: {
-        flex: 1,
-        paddingTop:14,
-        paddingLeft:25,
-        paddingRight:25
+        fontSize: 18,
+        paddingLeft:80,
+        paddingRight:80,
+        padding:10
     },
     areaCheckAnswer: {
-        height: '5%',
         alignItems: 'center',
         justifyContent: 'center'
     },
-    buttomCheckAnswer:{
-        width:'100%',
-        alignItems: 'center'
-    },
-    buttonCheck: {
-        fontFamily:'kanitRegular',
-        backgroundColor: '#2196F3',
-        textAlign:'center',
-        width:100,
-        fontSize:18,
-        padding:4,
-        color:'#fff',
-    },
-    textTime: {
-        fontFamily: 'kanitLight',
-        textAlign: 'center',
-        fontSize: 34,
-        color: '#FF6AB2'
-    },
 
-    container2: {
-        height:'100%',
-        zIndex:2,
-        flex:1, 
-        backgroundColor:'#000000aa',
-        alignItems: 'center',
-        justifyContent: 'center',
+    ////
+
+    centeredView: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        marginTop: 22
       },
-      popup:{
-          backgroundColor:'#fff', 
-          margin:50, 
-          padding:30,
+      modalView: {
+        margin: 20,
+        backgroundColor: "#fff",
+        borderRadius: 5,
+        padding: 35,
+        alignItems: "center",
+        shadowColor: "#000",
+        shadowOffset: {
+          width: 0,
+          height: 2
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5
       },
-      textPopup:{
-          fontFamily:'kanitRegular',
-          fontSize:21,
-          color:'#2196F3',
-          textAlign: 'center',
-      },
-      textPopupSmall:{
-          paddingTop:10,
-          fontFamily:'kanitLight',
-          fontSize:10,
-          color:'#7A7575',
-          textAlign: 'center',
+      modalText: {
+        marginBottom: 15,
+        textAlign: "center",
+        fontFamily: 'kanitRegular',
+        color:'#627498'
       }
 });
 
-class Exam extends React.Component{
+export default class Exam extends React.Component {
     state = {
         colorControlNext:'#2196F3',
         statusControlNext: false,
-        // ตั้งค่าเริ่มต้นให้ปุ่ม back กดไม่ได้ เพราะเป็นข้อแรกก่อน
+        // ตั้งค่าเริ่มต้นให้ปุ่ม back กดไม่ได้
         colorControlBack:'#eee',
         statusControlBack: true,
-
-        minute:9,
-        sec:60,
     }
-
-    componentDidMount() {
-        if(this.props.checkStartTime===true) this.startTimer();
-    }
-
     setArr = (x) => {
         let BF = 0
         if(x === 2) {
-            if( this.props.arrPosition === (this.props.examList.length-1)-1){
+            if( this.props.arrPosition === (this.props.examAll.length-1)-1){
                 this.setState({ colorControlNext :'#eee'})
                 this.setState({ statusControlNext : true})
             }
-            if(this.props.arrPosition === this.props.examList.length-1) {
+            if(this.props.arrPosition === this.props.examAll.length-1) {
                 this.setState({ colorControlNext : '#eee'})
                 this.setState({ statusControlNext : true})
 
@@ -178,18 +136,17 @@ class Exam extends React.Component{
             }
         }
     }
-
     setNextQuestion = (data) => {
         if( this.props.arrPosition === 1){
             this.setState({ colorControlBack :'#eee'})
             this.setState({ statusControlBack : true})
         }
-        if( this.props.arrPosition === (this.props.examList.length-1)-1){
+        if( this.props.arrPosition === (this.props.examAll.length-1)-1){
             this.setState({ colorControlNext :'#eee'})
             this.setState({ statusControlNext : true})
         }
 
-        if(this.props.arrPosition === this.props.examList.length-1) {
+        if(this.props.arrPosition === this.props.examAll.length-1) {
             this.props.nextQuestion(data)
             this.setState({ colorControlNext : '#eee'})
             this.setState({ statusControlNext : true})
@@ -203,102 +160,72 @@ class Exam extends React.Component{
             this.setState({ statusControlBack : false})
         }
     }
-    // Timemer
-    startTimer = () => {
-    this.clockCall = setInterval(() => {
-        this.decrementClock()
-    }, 1000);
-    }
-
-    decrementClock = () => {
-    if (this.state.sec !== 0) {
-        this.setState({ sec: this.state.sec - 1 })
-    }
-    else {
-        if (this.state.minute === 0) {
-        clearInterval(this.clockCall)
-        // ถ้าหมดเวลา
-        this.props.resetTime()
-        this.props.showScore()
-        }
-        else {
-        this.setState({ minute: this.state.minute - 1 })
-        this.setState({ sec: 60 })
-        }
-    }
-    }
-
-    componentWillUnmount() {
-        clearInterval(this.clockCall);
-        this.props.resetTime()
-    }
 
     render() {
-        let myJsx = null
-        myJsx = (
-            <View style = { styles.container2 }>
-                <View style={styles.popup}>
-                    <ProgressBarAndroid styleAttr="Horizontal" color="#2196F3" />
-                    <Text style={styles.textPopup}>รอแป๊บนึงเด้อจ้า ระบบกำลังประมวลผล</Text>
-                    <Text style={styles.textPopupSmall}>หมายเหตุ : หากรอนานเกินไป โปรดตรวจสอบการเชื่อมต่ออินเทอร์เน็ต และเปิดแอปพลิเคชันใหม่</Text>
-                </View>
-            </View>
-        )
         return (
             <View style = { styles.container }>
-                {this.props.statusPopup === true ? myJsx : 
-                <View>
-                    <View style = { styles.perpose }>
-                    <Text style = { styles.textTop }><Text style={{textDecorationLine:"underline"}}>คำชี้แจง</Text> ข้อสอบมีทั้งหมด 10 ข้อ เวลาในการทำ 10 นาที</Text>
+                <Modal
+                    animationType="fade"
+                    transparent={true}
+                    visible={this.props.checkDownloadStatus}
+                >
+                    <View style={styles.centeredView}>
+                        <View style={styles.modalView}>
+                            <ProgressBar indeterminate color='#17a2b8'/>
+                            <Text style={styles.modalText}>รอสักครู่ กำลังประมวลผล</Text>
+                        </View>
                     </View>
-                    <View style = { styles.Timmer }>
-                        <Text style={styles.textTime}>
+                </Modal>
+            {
+                // ถ้ายังไม่กดส่งคำตอบ หรือหมดเวลา จะยังไม่แสดงคะแนน
+                this.props.showResultPageStatus?
+                    <Result 
+                        score = {this.props.score} 
+                        exam = {this.props.examAll} 
+                    />
+                : // ทำข้อสอบ
+                <View>
+                    <View>
+                        <Text style={styles.time}>
                             {
-                                this.state.minute !== 0 ? this.state.minute +' นาที '+ this.state.sec +' วินาที'
-                                : this.state.sec !== 0 ? this.state.sec +' วินาที' : 'หมดเวลา'
+                                this.props.minute !== 0 ? this.props.minute +' นาที '+ this.props.sec +' วินาที'
+                                : this.props.sec !== 0 ? this.props.sec +' วินาที' : 'หมดเวลา'
                             }
                         </Text>
                     </View>   
+
                     <View style = { styles.boxExam }>
                         <ScrollView>
                             <ExamList 
-                                examAll = { this.props.examList[ this.props.arrPosition ] } 
-                                number = { this.props.arrPosition + 1 } 
+                                examAll = { this.props.examAll[this.props.arrPosition] } 
+                                number = { this.props.arrPosition + 1 }
                                 setNextQuestion = { this.setNextQuestion }
                             />
                         </ScrollView>
                     </View>  
-                    <View style = { styles.areaCheckAnswer }> 
-                        {this.props.showButtonAnswer === true ?
-                            <TouchableOpacity style = { styles.buttomCheckAnswer } onPress={this.props.showScore} >    
-                                <Text style = { styles.buttonCheck }>ส่งคำตอบ</Text>
-                            </TouchableOpacity>
-                        :null}
-                    </View>
-                    <View style = { styles.bottom }>
-                        <Text style = { styles.TextBottom }>หมวดวิชาภาค {this.props.topic==='1'?'ก':'ข'}</Text> 
-                    </View>
-                    <View style = { styles.bottomNP }>
-                        <TouchableOpacity  onPress={() => this.setArr(1)} disabled={ this.state.statusControlBack }>
-                            <Ionicons name="md-arrow-back" size={44} color={this.state.colorControlBack }/>
+                    <View style = { styles.btnNP }>
+                        <TouchableOpacity onPress={() => this.setArr(1)} disabled={ this.state.statusControlBack }>
+                            <Ionicons name="md-arrow-back" size={40} color={this.state.colorControlBack }/>
                         </TouchableOpacity > 
-                        <View style = { styles.circlePercen }>
-                            <ProgressBarAndroid
-                                styleAttr="Horizontal"
-                                indeterminate={false}
-                                progress={ this.props.checkProgress/10 }
-                                color="#2196F3"
-                            />
-                        </View>
-                        <TouchableOpacity  onPress={() => this.setArr(2)} disabled={ this.state.statusControlNext }>
-                            <Ionicons name="md-arrow-forward" size={ 44 } color={ this.state.colorControlNext }/>
+
+                        {this.props.checkProgress*10 === 100 ?
+                            <TouchableOpacity style = { styles.btnAnswer } onPress={this.props.showScore} >    
+                                <Text style = { styles.txtbtnAnswer }>ตรวจคำตอบ</Text>
+                            </TouchableOpacity>
+                        :<Text style = { styles.percentBar }>{(this.props.checkProgress*10)} % </Text>}
+                        
+                        <TouchableOpacity onPress={() => this.setArr(2)} disabled={ this.state.statusControlNext }>
+                            <Ionicons name="md-arrow-forward" size={40} color={ this.state.colorControlNext }/>
                         </TouchableOpacity >
                     </View>
-                </View>}
-                
-            </View>
+                </View>
+            }
+                <AdMobBanner
+                    bannerSize="fullBanner"
+                    adUnitID="ca-app-pub-5901161227057601/7244214360"
+                    servePersonalizedAds
+                    onDidFailToReceiveAdWithError={this.bannerError} />
+        </View>
         );
     }
 }
-
-export default Exam
