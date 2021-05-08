@@ -222,7 +222,7 @@ export default class Exam extends React.Component {
             }
                 <AdMobBanner
                     bannerSize="fullBanner"
-                    adUnitID="ca-app-pub-5901161227057601/7244214360"
+                    adUnitID="ca-app-pub-5901161227057601/7431599741"
                     servePersonalizedAds
                     onDidFailToReceiveAdWithError={this.bannerError} />
         </View>

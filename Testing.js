@@ -45,7 +45,7 @@ export default class Testing extends React.Component {
 
     getExam = () => {
         let examDB = []
-        axios.get(`https://xn--o3cdd5af5d5a4j.com/getExamsApp.php`)
+        axios.get(`https://xn--42cm7czac0a7jb0li.com/getExamsApp.php`)
             .then((response) => {
                 if (response.data.length === 0) console.log('No Data')
                 else {

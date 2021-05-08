@@ -9,9 +9,9 @@ export default class Home extends React.Component {
         linkNews:''
     }
     getNews = () => {
-        axios.get('https://xn--o3cdd5af5d5a4j.com/getNews.php')
+        axios.get('https://xn--42cm7czac0a7jb0li.com/getNews.php')
             .then((res) => {
-                this.setState({txt:res.data.news, linkNews:res.data.link})
+                this.setState({txt:res.data.news, linkNews:res.data.ref})
             })
             .catch((err) => {
                 console.log(err)
@@ -44,7 +44,7 @@ export default class Home extends React.Component {
                     }
                 </View>
                 <View style={styles.container}>
-                        <Text style={styles.txtdonate}>เลี้ยงกาแฟแอดมิน</Text>
+                        <Text style={styles.txtdonate}>เลี้ยงชานมไข่มุกแอดมิน</Text>
                         <Text style={styles.txtdonate2}>พร้อมเพย์ 082 781 8941 ชลธี สินสาตร์</Text>
                     <View style={styles.line}/>
                     <TouchableOpacity style={styles.btnTest} onPress={() => this.props.navigation.navigate('ทำข้อสอบ')}>
